@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} Главная {% endblock %}
+
+{% block body %}
+
+    <h1>{{ item.title }}</h1>
+    <h3>{{ item.price }}</h3>
+    <p>{{ item.description }}</p>
+    <a href="{{ item.get_add_to_cart_url }}" class="btn btn-primary">Add to cart</a>
+    <a href="{{ item.get_remove_from_cart_url }}" class="btn btn-danger">Remove from cart</a>
+{% endblock %}

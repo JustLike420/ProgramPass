@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %} Главная {% endblock %}
+
+{% block body %}
+
+    <main class="container">
+
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h1 class="display-4">Товары</h1>
+            <p class="lead"></p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            {% for e in items %}
+                <div class="col">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="my-0 fw-normal">{{ e.title }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">{{ e.price }} <small class="text-muted">рублей</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>{{ e.description }}</li>
+
+                            </ul>
+                            <a href="{{ e.get_absolute_url }}" class="w-100 btn btn-lg btn-outline-primary">Детали</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}
