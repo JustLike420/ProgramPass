@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'crispy_forms',
 
     'shop',
 ]
@@ -148,3 +149,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+# CRISPY
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
