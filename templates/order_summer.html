@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block body %}
+    <main>
+        <div class="container">
+            <div class="table-responsive">
+                <h2>Сводка по заказу</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Цена</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order_item in object.items.all %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ order_item.item.title }}</td>
+                            <td>{{ order_item.item.price }} рублей</td>
+                        <td><i class="fas fa-minus"></i></td>
+
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">Ваша корзина пуста.</td>
+                        </tr>
+                        <tr>
+                        <td colspan="2">
+                        <a class="btn btn-warning float-right ml-2" href="/">Продолжить покупки</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"><b>Общая цена:</b></td>
+                        <td><b>{{ object.get_total }} рублей.</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a class="btn btn-warning float-right ml-2" href="/">Продолжить покупки</a>
+                            <a class="btn btn-primary float-right" href="/cheakout/">Перейти к оформлению заказа</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

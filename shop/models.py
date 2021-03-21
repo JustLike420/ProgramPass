@@ -28,10 +28,17 @@ class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
     # quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return f"1 of {self.item.title}"
+
+    def get_total_item_price(self):
+        return self.item.price
+
+    def get_final_price(self):
+        return self.get_total_item_price()
 
 
 class Order(models.Model):
@@ -43,3 +50,10 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_total(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_final_price()
+        return total
+

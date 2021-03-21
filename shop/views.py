@@ -1,7 +1,11 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required  # надо быть залогининым что вы вызвать функцию
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
+from django.views.generic.base import View
 
 from .models import Item, OrderItem, Order
 
@@ -25,6 +29,19 @@ class HomeView(ListView):
     context_object_name = 'items'
 
 
+class OrderSummeryView(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            context = {
+                'object': order,
+            }
+            return render(self.request, 'order_summer.html', context)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "У вас нету активного заказа")
+            return redirect("/")
+
+
 class ItemDetailView(DetailView):
     model = Item
     template_name = "product.html"
@@ -32,6 +49,7 @@ class ItemDetailView(DetailView):
 
 
 # добавление товара в корзину
+@login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
@@ -59,7 +77,7 @@ def add_to_cart(request, slug):
 
 
 # удаление товара в корзину
-
+@login_required
 def remove_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_qs = Order.objects.filter(
