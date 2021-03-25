@@ -63,20 +63,20 @@ def add_to_cart(request, slug):
         order = order_qs[0]
         if order.items.filter(item__slug=item.slug).exists():
             messages.info(request, "Товар уже добавлен в корзину.")
-            return redirect("core:product", slug=slug)
+            return redirect("core:order-summary")
         else:
             messages.info(request, "Этот товар был добавлен в вашу корзину.")
             order.items.add(order_item)
-            return redirect("core:product", slug=slug)
+            return redirect("core:order-summary")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
         messages.info(request, "Этот товар был добавлен в вашу корзину.")
-        return redirect("core:product", slug=slug)
+        return redirect("core:order-summary")
 
 
-# удаление товара в корзину
+# удаление товара из корзины на странице товара
 @login_required
 def remove_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
@@ -92,12 +92,12 @@ def remove_from_cart(request, slug):
                 ordered=False)[0]
             order.items.remove(order_item)
             messages.info(request, "Товар был удален из вашей корзины.")
-            return redirect("core:product", slug=slug)
+            return redirect("core:order-summary")
         else:
             # заказ не содержит этого товара
             messages.info(request, "Этого товара нет в вашей корзине.")
-            return redirect("core:product", slug=slug)
+            return redirect("core:order-summary")
     else:
         # нет заказа
         messages.info(request, "У вас нет активного заказа.")
-        return redirect("core:product", slug=slug)
+        return redirect("core:order-summary")

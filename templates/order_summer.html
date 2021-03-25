@@ -19,7 +19,7 @@
                             <th scope="row">{{ forloop.counter }}</th>
                             <td>{{ order_item.item.title }}</td>
                             <td>{{ order_item.item.price }} рублей</td>
-                        <td><i class="fas fa-minus"></i></td>
+                            <td><a href="{% url 'core:remove-from-cart' order_item.item.slug %}">DELETE</a></td>
 
                         </tr>
                     {% empty %}
@@ -27,21 +27,23 @@
                             <td colspan="5">Ваша корзина пуста.</td>
                         </tr>
                         <tr>
-                        <td colspan="2">
-                        <a class="btn btn-warning float-right ml-2" href="/">Продолжить покупки</a>
-                        </td>
-                    </tr>
+                            <td colspan="2">
+                                <a class="btn btn-warning float-right ml-2" href="/">Продолжить покупки</a>
+                            </td>
+                        </tr>
                     {% endfor %}
-                    <tr>
-                        <td colspan="2"><b>Общая цена:</b></td>
-                        <td><b>{{ object.get_total }} рублей.</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <a class="btn btn-warning float-right ml-2" href="/">Продолжить покупки</a>
-                            <a class="btn btn-primary float-right" href="/cheakout/">Перейти к оформлению заказа</a>
-                        </td>
-                    </tr>
+                    {% if object.get_total %}
+                        <tr>
+                            <td colspan="2"><b>Общая цена:</b></td>
+                            <td><b>{{ object.get_total }} рублей.</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <a class="btn btn-warning float-right ml-2" href="/">Продолжить покупки</a>
+                                <a class="btn btn-primary float-right" href="/cheakout/">Перейти к оформлению заказа</a>
+                            </td>
+                        </tr>
+                    {% endif %}
                     </tbody>
                 </table>
             </div>
