@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
-
+from .forms import CheckoutForm
 from .models import Item, OrderItem, Order
 
 
@@ -21,6 +21,34 @@ def item_list(request):
 
 def about(request):
     return render(request, "about.html")
+
+
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        form = CheckoutForm()
+        context = {
+            'form': form,
+            'object': order,
+        }
+        return render(self.request, "checkout.html", context)
+
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            if form.is_valid():
+                order.name = form.cleaned_data.get('name')
+                order.phone = form.cleaned_data.get('phone')
+                order.telegram = form.cleaned_data.get('telegram')
+                order.payment = form.cleaned_data.get('payment')
+                order.save()
+                return redirect('core:checkout')
+            messages.warning(self.request, "Failed")
+            return redirect('core:checkout  ')
+        except ObjectDoesNotExist:
+            messages.error(self.request, "У вас нет активного заказа")
+            return redirect('core:order-summary')
 
 
 class HomeView(ListView):
